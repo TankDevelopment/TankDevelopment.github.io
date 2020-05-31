@@ -184,7 +184,7 @@ class Scene2 extends Phaser.Scene {
         var scene = this;
         this.PlayerLives -= 1;
         if(this.PlayerLives <= 0){
-            setTimeout(this.gameOver(scene), 3000);
+            setTimeout(function() {scene.gameOver(scene)}, 3000);
         } else {
             Tank.x = 320;
             Tank.y = game.config.height - 16;
@@ -231,34 +231,34 @@ class Scene2 extends Phaser.Scene {
         Tank.Tick -= 3;
     }
     gameOver(scene) {
-        scene.gameOverText = scene.add.text(270, 250, "GAME OVER");
-        var tween = scene.tweens.add({
-        targets: screenLeft.PlayerTank,
+        this.gameOverText = scene.add.text(275, 250, "GAME OVER");
+        var tween = this.tweens.add({
+        targets: this.PlayerTank,
         ease: 'Power1',
-        alpha: 1,
+        alpha: 0,
         duration: 5000,
         repeat: 0,
         onComplete: function(){
-            for(var i = 0; i < scene.EnemyTanks.getChildren().length; i++){
-                var EnemyTank = scene.EnemyTanks.getChildren()[i];
+            for(var i = 0; i < this.EnemyTanks.getChildren().length; i++){
+                var EnemyTank = this.EnemyTanks.getChildren()[i];
                 EnemyTank.destroy();
             }
-            for(var i = 0; i < scene.EnemyProjectiles.getChildren().length; i++){
-                var EnemyProj = scene.EnemyProjectiles.getChildren()[i];
+            for(var i = 0; i < this.EnemyProjectiles.getChildren().length; i++){
+                var EnemyProj = this.EnemyProjectiles.getChildren()[i];
                 EnemyProj.destroy();
             }
-            for(var i = 0; i < scene.PlayerProjectiles.getChildren().length; i++){
-                var PlayerProj = scene.PlayerProjectiles.getChildren()[i];
+            for(var i = 0; i < this.PlayerProjectiles.getChildren().length; i++){
+                var PlayerProj = this.PlayerProjectiles.getChildren()[i];
                 PlayerProj.destroy();
             }
-            for(var i = 0; i < scene.Walls.getChildren().length; i++){
-                var Wall = scene.Walls.getChildren()[i];
+            for(var i = 0; i < this.Walls.getChildren().length; i++){
+                var Wall = this.Walls.getChildren()[i];
                 Wall.destroy();
             }
-            scene.gameOverText.destroy();
-            scene.scene.start("BootGame");
+            this.gameOverText.destroy();
+            this.scene.start("BootGame");
         },
-        callbackScope: scene
+        callbackScope: this
         })
     }
 }
