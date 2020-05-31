@@ -61,8 +61,10 @@ class Scene2 extends Phaser.Scene {
         this.physics.add.overlap(this.EnemyTanks, this.Walls, this.wallCollide, null, this);
     }
     update() {
-        this.PlayerTankMovement();
-        this.PlayerTankShoot();
+        if(this.PlayerTank.Destroyed == false) {
+            this.PlayerTankMovement();
+            this.PlayerTankShoot();
+        }
         for(var i = 0; i < this.PlayerProjectiles.getChildren().length; i++){
             var PlayerProjectile = this.PlayerProjectiles.getChildren()[i];
             PlayerProjectile.update();
@@ -182,17 +184,7 @@ class Scene2 extends Phaser.Scene {
         var scene = this;
         this.PlayerLives -= 1;
         if(this.PlayerLives <= 0){
-            var tween2 = scene.tweens.add({
-            targets: Tank,
-            ease: 'Power1',
-            alpha: 1,
-            duration: 3000,
-            repeat: 0,
-            onComplete: function(){
-                this.gameOver();
-            },
-            callbackScope: this
-            })
+            setTimeout(this.gameOver, 3000);
         } else {
             Tank.x = 320;
             Tank.y = game.config.height - 16;
@@ -239,8 +231,9 @@ class Scene2 extends Phaser.Scene {
         Tank.Tick -= 3;
     }
     gameOver() {
-        this.gameOverText = this.add.text(270, 250, "GAME OVER");
-        var tween = this.tweens.add({
+        var scene = this;
+        this.gameOverText = scene.add.text(270, 250, "GAME OVER");
+        var tween = scene.tweens.add({
         targets: this.PlayerTank,
         ease: 'Power1',
         alpha: 1,
